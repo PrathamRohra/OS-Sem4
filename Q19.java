@@ -1,7 +1,7 @@
 import java.util.*;
-//FCFS disk
+//SSTF disk
 
-public class Q18 {
+public class Q19 {
     public static void main(String[] args) {
 
         int[] requestQueue = new int[] { 90, 120, 30, 40, 115, 130, 110, 80, 190, 25 };
@@ -16,20 +16,36 @@ public class Q18 {
         
         System.out.println();
         System.out.println("\t\t+--------------------------------------+");
-        System.out.println("\t\t|Output for FCFS Disk Scheduling Policy|");
+        System.out.println("\t\t|Output for SSTF Disk Scheduling Policy|");
         System.out.println("\t\t+--------------------------------------+");
         System.out.println("\n\tHead currently at: " + currentHead);
         
         System.out.println("\n     Iteration \t Current Head \t Disk Movement \t Total Disk Movement");
         System.out.println("------------------------------------------------------------------------");
         
+        boolean[] traversed = new boolean[requestQueue.length]; 
         for(int i = 0; i < requestQueue.length; ++i) {
-            int currentDiskMovement = Math.abs(currentHead - requestQueue[i]);
-            totalHeadMovement += currentDiskMovement;
-            orderOfProcessing[i] = requestQueue[i];
-            currentHead = requestQueue[i];
             
-            System.out.println( "\t" + (i + 1) +"\t\t" + currentHead + "\t\t" + currentDiskMovement + "\t\t" + totalHeadMovement);
+            int minimumDifference = 1000000, index = -1;
+            
+            for(int j = 0; j < requestQueue.length; ++j) {
+                
+                if(currentHead != requestQueue[j] && !traversed[j]) {
+                    int currentDifference = Math.abs(currentHead - requestQueue[j]);
+                    
+                    if(currentDifference < minimumDifference) {
+                        minimumDifference = currentDifference;
+                        index = j;
+                    }
+                }
+            }
+            
+            totalHeadMovement += minimumDifference;
+            orderOfProcessing[i] = requestQueue[index];
+            currentHead = requestQueue[index];
+            traversed[index] = true;
+            
+            System.out.println( "\t" + (i + 1) +"\t\t" + currentHead + "\t\t" + minimumDifference + "\t\t" + totalHeadMovement);
         }
         System.out.println("------------------------------------------------------------------------");
         
